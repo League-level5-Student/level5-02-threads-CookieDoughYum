@@ -106,13 +106,13 @@ public class AdvancedRobotRace {
 			}
 		});
 		
-		r1.run();
-		r2.run();
-		r3.run();
-		r4.run();
-		r5.run();
-		r6.run();
-		r7.run();
+		r1.start();
+		r2.start();
+		r3.start();
+		r4.start();
+		r5.start();
+		r6.start();
+		r7.start();
 		}
 	}
 	
