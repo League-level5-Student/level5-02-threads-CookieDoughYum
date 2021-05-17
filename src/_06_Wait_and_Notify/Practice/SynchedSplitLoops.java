@@ -17,19 +17,31 @@ printed in order.
 
 public class SynchedSplitLoops {
 	static int counter = 0;
+	public static Object swimmingPool;
 	
 	public static void main(String[] args) {
+		synchronized(swimmingPool){
 		Thread t1 = new Thread(() -> {
 			for(int i = 0; i < 100000; i++) {
 				counter++;
 			}
 		});
 		
+		
 		Thread t2 = new Thread(() -> {
 			for(int i = 0; i < 100000; i++) {
 				System.out.println(counter);
 			}
 		});
+		
+		try {
+			swimmingPool.wait();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		swimmingPool.notify();
+		
 		
 		t1.start();
 		t2.start();
@@ -40,6 +52,8 @@ public class SynchedSplitLoops {
 		} catch (InterruptedException e) {
 			System.err.println("Could not join threads");
 		}
+		}
 		
 	}
+	
 }
