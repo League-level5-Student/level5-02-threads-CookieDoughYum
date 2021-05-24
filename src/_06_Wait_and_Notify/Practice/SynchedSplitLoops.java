@@ -17,30 +17,46 @@ printed in order.
 
 public class SynchedSplitLoops {
 	static int counter = 0;
-	public static Object swimmingPool;
+	public static Object swimmingPool=new Object();
 	
 	public static void main(String[] args) {
-		synchronized(swimmingPool){
 		Thread t1 = new Thread(() -> {
+			synchronized(swimmingPool) {
 			for(int i = 0; i < 100000; i++) {
+				try {
+					swimmingPool.wait();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				counter++;
+				swimmingPool.notify();
 			}
+			}
+			
 		});
+		
 		
 		
 		Thread t2 = new Thread(() -> {
+			synchronized(swimmingPool) {
 			for(int i = 0; i < 100000; i++) {
 				System.out.println(counter);
+				swimmingPool.notify();
+				try {
+					swimmingPool.wait();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 			}
+			}
+			
+			
 		});
 		
-		try {
-			swimmingPool.wait();
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		swimmingPool.notify();
+		
 		
 		
 		t1.start();
@@ -56,4 +72,4 @@ public class SynchedSplitLoops {
 		
 	}
 	
-}
+
